@@ -1,0 +1,231 @@
+\documentclass{report}
+\usepackage[showframe=false]{geometry}
+\usepackage{titlesec}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{qtree}
+
+\pagenumbering{gobble}
+
+\geometry{tmargin=60pt,bmargin=90pt,lmargin=90pt,
+rmargin=90pt}
+
+\titleformat{\chapter}{\normalfont\huge}{\thechapter.}{20pt}{\huge}
+\titlespacing*{\chapter} {0pt}{0pt}{10pt}
+
+\begin{document}
+
+\chapter{Section 1}
+Grammer
+
+\begin{equation}
+\begin{split}
+  <exp> & ::= <exp> + <exp> \\
+  <exp> & ::= <exp> * <exp> \\
+  <exp> & ::= (<exp>) \\
+  <exp> & ::= id
+\end{split}
+\end{equation}
+
+\section{a}
+What is the set of tokens of the grammar?
+
+Answer: id, +, *, (, )
+
+\section{b}
+Write a leftmost derivation for id * id + id
+
+Answer:
+
+\begin{equation}
+\begin{split}
+  & <exp> \\
+  & <exp> * <exp> \\
+  & id * <exp> \\
+  & id * <exp> + <exp> \\
+  & id * id + <exp> \\
+  & id * id + id 
+\end{split}
+\end{equation}
+
+
+\section{c}
+Draw a parse tree for id * id + id
+
+\Tree [.$<exp>$  
+        [.$<exp>$ 
+          [.id ]
+        ]
+        [.* ]
+        [.$<exp>$
+          [.$<exp>$
+            [.id ]
+          ]
+          [.+ ]
+          [.$<exp>$ 
+            [.id ]
+          ]
+        ]
+      ]
+
+\section{d}
+Write a rightmost derivation for id * ( id + id )
+
+Answer:
+
+\begin{equation}
+\begin{split}
+  & <exp> \\
+  & <exp> * <exp> \\
+  & <exp> * ( <exp> ) \\
+  & <exp> * ( <exp> + <exp> ) \\
+  & <exp> * ( <exp + id ) \\
+  & <exp> * ( id + id ) \\
+  & id * ( id + id ) \\
+\end{split}
+\end{equation}
+
+\section{e}
+Drawn a parse tree for id * ( id + id )
+
+\Tree [.$<exp>$  
+        [.$<exp>$ 
+          [.id ]
+        ]
+        [.* ]
+        [.$<exp>$
+          [.( ]
+          [.$<exp>$ 
+            [.$<exp>$
+              [.id ]
+            ]
+            [.+ ]
+            [.$<exp>$ 
+              [.id ]
+            ]
+          ]
+          [.) ]
+        ]
+      ]
+
+\chapter{Section 2}
+
+\section{a}
+Write a grammar for the language of arithmetic
+expressions.
+
+\begin{equation}
+\begin{split}
+  <exp> & ::= <exp> + <exp> \\
+  <exp> & ::= <exp> - <exp> \\
+  <exp> & ::= <exp> * <exp> \\
+  <exp> & ::= <exp> / <exp> \\
+  <exp> & ::= ( <exp> )\\
+  <exp> & ::= id | integer | float \\
+\end{split}
+\end{equation}
+
+\section{b}
+Draw a parse tree for expression id + id / integer using
+the grammar.
+
+Answer: Two possible Solution
+
+Solution 1:
+
+\Tree [.$<exp>$  
+        [.$<exp>$ 
+          [.id ]
+        ]
+        [.+ ]
+        [.$<exp>$
+          [.$<exp>$
+            [.id ]
+          ]
+          [./ ]
+          [.$<exp>$ 
+            [.integer ]
+          ]
+        ]
+      ]
+
+Solution 2:
+
+\Tree [.$<exp>$  
+        [.$<exp>$ 
+          [.$<exp>$
+            [.id ]
+          ]
+          [.+ ]
+          [.$<exp>$ 
+            [.id ]
+          ]
+        ]
+        [./ ]
+        [.$<exp>$
+          [.integer ]
+        ]
+      ]
+
+\section{c}
+Draw a parse tree for expression id * ( id + integer /
+float ) using the grammar.
+
+Answer: Two possible Solutions
+
+Solution 1:
+
+\Tree [.$<exp>$  
+        [.$<exp>$ 
+          [.id ]
+        ]
+        [.* ]
+        [.$<exp>$
+          [.( ]
+          [.$<exp>$
+            [.$<exp>$
+              [.id ]
+            ]
+            [.+ ]
+            [.$<exp>$ 
+              [.$<exp>$
+                [.integer ]
+              ]
+              [./ ]
+              [.$<exp>$
+                [.float ]
+              ]
+            ]
+          ]
+          [.) ]
+        ]
+      ]
+
+Solution 2:
+
+\Tree [.$<exp>$  
+        [.$<exp>$ 
+          [.id ]
+        ]
+        [.* ]
+        [.$<exp>$
+          [.( ]
+          [.$<exp>$
+            [.$<exp>$
+              [.$<exp>$
+                [.id ]
+              ]
+              [.+ ]
+              [.$<exp>$
+                [.integer ]
+              ]
+            ]
+            [./ ]
+            [.$<exp>$ 
+              [.float ]
+            ]
+          ]
+          [.) ]
+        ]
+      ]
+\end{document}

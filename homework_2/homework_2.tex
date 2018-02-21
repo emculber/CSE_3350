@@ -1,0 +1,354 @@
+\documentclass{report}
+\usepackage[showframe=false]{geometry}
+\usepackage{titlesec}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{qtree}
+\usepackage{lscape}
+
+\pagenumbering{gobble}
+
+\geometry{tmargin=60pt,bmargin=90pt,lmargin=90pt,
+rmargin=90pt}
+
+\titleformat{\chapter}{\normalfont\huge}{\thechapter.}{20pt}{\huge}
+\titlespacing*{\chapter} {0pt}{0pt}{10pt}
+
+\begin{document}
+
+\chapter{Section 1}
+Give an unambiguous grammar to the language of arithmetic
+expressions consisting of variable identifiers, integer
+constants, float-point constants, addition (+), subtraction (-),
+multiplication (*), division (/), and exponentiation (\#)
+operators as well as parentheses. Adopt usual convention for
+operator precedence and associativity. Note that (\#) has the
+highest precedence and associates to the right. Assume that
+id, integer and float are tokens.
+
+
+Order of Operations
+
+1. Parentheses
+
+2. Power
+
+3. Multiplication or division (Left - Right)
+
+4. Addition or Subtration (Left - Right)
+
+\begin{equation}
+\begin{split}
+  <addsubexp> & ::= <addsubexp> + <muldivexp> | <addsubexp> - <muldivexp> | <muldivexp> \\
+  <muldivexp> & ::= <muldivexp> * <expexp> | <muldivexp> / <expexp> | <expexp> \\
+  <expexp> & ::= <rootexp> \# <expexp> | <rootexp> \\
+  <rootexp> & ::= (<addsubexp>) |  id  |  integer  |  float \\
+\end{split}
+\end{equation}
+
+\chapter{Section 2}
+
+Using the above grammar, draw a parse tree and an abstract
+syntax tree for each of the following expressions where
+English letters are variable identifiers.
+
+\section{a}
+
+$$X+Y*Z\#2$$
+
+Parse Tree
+
+\Tree [.$<addsubexp>$  
+        [.$<addsubexp>$
+          [.$<muldivexp>$
+            [.$<expexp>$
+              [.$<rootexp>$
+                [.id
+                [.X ]
+                ]
+              ]
+            ]
+          ]
+        ]
+        [.+ ]
+        [.$<muldivexp>$
+          [.$<muldivexp>$
+            [.$<expexp>$
+              [.$<rootexp>$
+                [.id 
+                  [.Y ]
+                ]
+              ]
+            ]
+          ]
+          [.* ]
+          [.$<expexp>$ 
+            [.$<expexp>$ 
+              [.$<rootexp>$ 
+                [.id
+                  [.Z ] 
+                ]
+              ]
+            ]
+            [.\# ]
+            [.$<rootexp>$ 
+              [.Integer
+                [.2 ] 
+              ]
+            ]
+          ]
+        ]
+      ]
+
+Abstract Syntax
+
+\Tree [.(+)
+        [.X ]
+        [.*
+          [.Y ]
+          [.\#
+            [.Z ] 
+            [.2 ] 
+          ]
+        ]
+      ]
+
+\newpage
+\section{b}
+
+$$X*(Y+7/2/V)$$
+
+Parse Tree
+
+\Tree [.$<addsubexp>$  
+        [.$<muldivexp>$
+          [.$<muldivexp>$
+            [.$<expexp>$
+              [.$<rootexp>$
+                [.id
+                  [.X ]
+                ]
+              ]
+            ]
+            !\qsetw{3cm}
+          ]
+          [.* !\qsetw{3cm} ]
+          [.$<expexp>$
+            [.$<rootexp>$
+              [.( !\qsetw{3cm} ]
+              [.$<addsubexp>$
+                [.$<addsubexp>$
+                  [.$<muldivexp>$
+                    [.$<expexp>$
+                      [.$<rootexp>$
+                        [.id
+                          [.Y ]
+                        ]
+                      ]
+                    ]
+                  ]
+                  !\qsetw{5.5cm}
+                ]
+                [.+ !\qsetw{5.5cm} ]
+                [.$<muldivexp>$
+                  [.$<muldivexp>$
+                    [.$<muldivexp>$
+                      [.$<expexp>$
+                        [.$<rootexp>$
+                          [.Integer 
+                            [.7 ]
+                          ]
+                        ]
+                      ]
+                    ]
+                    [./ ]
+                    [.$<expexp>$
+                      [.$<rootexp>$
+                        [.Integer 
+                          [.2 ]
+                        ]
+                      ]
+                    ]
+                    !\qsetw{1cm}
+                  ]
+                  [./ !\qsetw{1cm} ]
+                  [.$<expexp>$
+                    [.$<rootexp>$
+                      [.id
+                        [.V ]
+                      ]
+                    ]
+                    !\qsetw{1cm}
+                  ]
+                  !\qsetw{5.5cm}
+                ]
+                !\qsetw{3cm}
+              ]
+              [.) !\qsetw{3cm} ]
+            ]
+            !\qsetw{3cm}
+          ]
+        ]
+      ]
+
+Abstract Syntax
+
+\Tree [.*
+        [.X ]
+        [.+
+          [.Y ]
+          [./ 
+            [./ 
+              [.7 ]
+              [.2 ]
+            ]
+            [.V ]
+          ]
+          ]
+      ]
+
+\newpage
+\section{c}
+$$(X+Y)*(Z-X-Y)$$
+
+Parse Tree
+
+\Tree [.$<addsubexp>$  
+        [.$<muldivexp>$
+          [.$<muldivexp>$
+            [.$<expexp>$
+              [.$<rootexp>$
+                [.( !\qsetw{3cm} ]
+                [.$<addsubexp>$
+                  [.$<addsubexp>$
+                    [.$<muldivexp>$
+                      [.$<expexp>$
+                        [.$<rootexp>$
+                          [.id
+                            [.X ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                  [.+ ]
+                  [.$<muldivexp>$
+                    [.$<expexp>$
+                      [.$<rootexp>$
+                        [.id
+                          [.Y ]
+                        ]
+                      ]
+                    ]
+                  ]
+                  !\qsetw{3cm}
+                ]
+                [.) !\qsetw{3cm} ]
+              ]
+            ]
+          ]
+          [.* ]
+          [.$<expexp>$
+            [.$<rootexp>$
+              [.( !\qsetw{4cm} ]
+              [.$<addsubexp>$
+                [.$<addsubexp>$
+                  [.$<addsubexp>$
+                    [.$<muldivexp>$
+                      [.$<expexp>$
+                        [.$<rootexp>$
+                          [.id
+                            [.Z ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                  [.- ]
+                  [.$<muldivexp>$
+                    [.$<expexp>$
+                      [.$<rootexp>$
+                        [.id
+                          [.X ]
+                        ]
+                      ]
+                    ]
+                  ]
+                  !\qsetw{4cm}
+                ]
+                [.- !\qsetw{4cm} ]
+                [.$<muldivexp>$
+                  [.$<expexp>$
+                    [.$<rootexp>$
+                      [.id
+                        [.Y ]
+                      ]
+                    ]
+                  ]
+                  !\qsetw{3cm}
+                ]
+                !\qsetw{4cm}
+              ]
+              [.) !\qsetw{4cm} ]
+            ]
+          ]
+        ]
+      ]
+
+Abstract Syntax
+
+\Tree [.*
+        [.+
+          [.X ]
+          [.Y ]
+        ]
+        [.- 
+          [.- 
+            [.Z ]
+            [.X ]
+          ]
+          [.Y ]
+        ]
+      ]
+
+\chapter{Section 3}
+Extend the grammar in item 1 so that the language contains
+Boolean expressions formed of comparison operators == and
+$>=$ applied to arithmetic expressions and Boolean operators
+\&\&, $||$ and ! (not) applied to Boolean expressions. The
+operator ! (logical negation) is prefix and is of higher
+precedence than \&\& (logical conjunction) that has higher
+precedence than $||$ (logical disjunction).
+
+Order of Operations
+
+1. Parentheses
+
+2. Power
+
+3. Multiplication or division (Left - Right)
+
+4. Addition or Subtration (Left - Right)
+
+5. == or $>=$
+
+6. !
+
+7. \&\&
+
+8. $||$
+
+\begin{equation}
+\begin{split}
+  <logconj> & ::= <logconj> || <logdisj> | <logdisj> | <addsubexp> \\
+  <logdisj> & ::= <logdisj> \&\& <logneg> | <logneg> \\
+  <logneg> & ::= !<compopt> | <compopt> \\
+  <compopt> & ::= <addsubexp> == <addsubexp> | <addsubexp> >= <addsubexp> \\
+  <addsubexp> & ::= <addsubexp> + <muldivexp> | <addsubexp> - <muldivexp> | <muldivexp> \\
+  <muldivexp> & ::= <muldivexp> * <expexp> | <muldivexp> / <expexp> | <expexp> \\
+  <expexp> & ::= <rootexp> \# <expexp> | <rootexp> \\
+  <rootexp> & ::= (<logconj>) |  id  |  integer  |  float \\
+\end{split}
+\end{equation}
+
+\end{document}
