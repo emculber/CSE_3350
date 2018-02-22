@@ -48,17 +48,26 @@ print   { return PRINT; }
 
 [ \t\f\r]	;		 // ignore white space 
 
-\n      { line_num++; }
-"-"	{ return MINUS;  }
-"+"	{ return PLUS;   }
-"*"	{ return TIMES;  }
-"/"	{ return DIVIDE; }
-"("	{ return LPAREN; }
-")"	{ return RPAREN; }
-"{"	{ return LBRACE; }
-"}"	{ return RBRACE; }
-"=" { return EQUALS; }
-";" { return SEMICOLON;}
+\n   { line_num++;              }
+"-"	 { return MINUS;            }
+"+"	 { return PLUS;             }
+"*"	 { return TIMES;            }
+"/"	 { return DIVIDE;           }
+"("	 { return LPAREN;           }
+")"	 { return RPAREN;           }
+"{"	 { return LBRACE;           }
+"}"	 { return RBRACE;           }
+"="  { return EQUALS;           }
+";"  { return SEMICOLON;        }
+"||" { return OR;               }
+"&&" { return AND;              }
+"!"  { return NOT;              }
+"==" { return BOOLEQUAL;        }
+">=" { return BOOLGREATEREQUAL; }
+"<=" { return BOOLLESSEQUAL;    }
+">"  { return BOOLGREATER;      }
+"<"  { return BOOLLESS;         }
+"!=" { return BOOLNOTEQUAL;     }
 
 . { BEGIN(ERROR); yymore(); }
 <ERROR>[^{DIGIT}{LETTER}+\-/*(){}= \t\n\f\r] { yymore(); }

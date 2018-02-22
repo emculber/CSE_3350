@@ -108,8 +108,8 @@ void multiply_node:: print() {
 
 // divide_node inherits the characteristics of node and adds its own evaluate function
 
-  divide_node::divide_node(exp_node *L, exp_node *R) : binaryOp_node(L,R) {
-  }
+divide_node::divide_node(exp_node *L, exp_node *R) : binaryOp_node(L,R) {
+}
 
 void divide_node:: print() {
   cout << "(";
@@ -119,23 +119,50 @@ void divide_node:: print() {
   cout << ")";
 }
 
-  float divide_node::evaluate() {
-    float left_num, right_num;
+float divide_node::evaluate() {
+  float left_num, right_num;
 
-    left_num = left->evaluate();
-    right_num = right->evaluate();
+  left_num = left->evaluate();
+  right_num = right->evaluate();
 
-    if(right_num)
-      {
-        return  left_num / right_num;
-      }
-    else
-      {
-	cout << "division by zero -> " << left_num << " / " << 0 << endl;
-	//  include stdlib.h for exit
-	exit(1);
-      }
+  if(right_num)
+  {
+    return  left_num / right_num;
   }
+  else
+  {
+    cout << "division by zero -> " << left_num << " / " << 0 << endl;
+    //  include stdlib.h for exit
+    exit(1);
+  }
+}
+
+bool_equal_node::bool_equal_node(exp_node *L, exp_node *R) : binaryOp_node(L,R) {
+}
+
+void bool_equal_node:: print() {
+  cout << "(";
+  left->print();
+  cout << " == ";
+  right->print();
+  cout << ")";
+}
+
+float bool_equal_node::evaluate() {
+  float left_num, right_num;
+
+  left_num = left->evaluate();
+  right_num = right->evaluate();
+
+  if(left_num == right_num)
+  {
+    return  1;
+  }
+  else
+  {
+    return 0;
+  }
+}
 
 neg_node::neg_node(exp_node *L) : exp(L) {}
 

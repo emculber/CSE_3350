@@ -6,6 +6,22 @@
 
 using namespace std;
 
+/*
+class logic_node {
+  public:
+    virtual void print() = 0;
+    virtual float evaluate() = 0;
+};
+
+class or_node : public logic_node {
+  public:
+
+    or_node(logic_node *L, logic_node *R);
+    void print();
+    float evaluate();
+}
+*/
+
 class exp_node {
   public:
 
@@ -91,6 +107,54 @@ class divide_node : public binaryOp_node {
   public:
 
   divide_node(exp_node *L, exp_node *R);
+  void print();
+  float evaluate();
+};
+
+class bool_equal_node : public binaryOp_node {
+  public:
+
+  bool_equal_node(exp_node *L, exp_node *R);
+  void print();
+  float evaluate();
+};
+
+class bool_greater_equal_node : public binaryOp_node {
+  public:
+
+  bool_greater_equal_node(exp_node *L, exp_node *R);
+  void print();
+  float evaluate();
+};
+
+class bool_less_equal_node : public binaryOp_node {
+  public:
+
+  bool_less_equal_node(exp_node *L, exp_node *R);
+  void print();
+  float evaluate();
+};
+
+class bool_greater_node : public binaryOp_node {
+  public:
+
+  bool_greater_node(exp_node *L, exp_node *R);
+  void print();
+  float evaluate();
+};
+
+class bool_less_node : public binaryOp_node {
+  public:
+
+  bool_less_node(exp_node *L, exp_node *R);
+  void print();
+  float evaluate();
+};
+
+class bool_not_equal_node : public binaryOp_node {
+  public:
+
+  bool_not_equal_node(exp_node *L, exp_node *R);
   void print();
   float evaluate();
 };
