@@ -1,0 +1,9 @@
+read n;
+i = 0;
+x = 0;
+while(i < n) {
+  read l;
+  x = x+l;
+  i = i+1;
+};
+print x;

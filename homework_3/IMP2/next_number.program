@@ -1,0 +1,17 @@
+n = 3;
+i = 0;
+x = 1;
+mul = 3;
+while(i < n) {
+  print x;
+  x = x * mul;
+  i = i+1;
+};
+
+read answer;
+
+if(answer == x) {
+  print 1;
+}else{
+  print 0;
+}

@@ -6,22 +6,6 @@
 
 using namespace std;
 
-/*
-class logic_node {
-  public:
-    virtual void print() = 0;
-    virtual float evaluate() = 0;
-};
-
-class or_node : public logic_node {
-  public:
-
-    or_node(logic_node *L, logic_node *R);
-    void print();
-    float evaluate();
-}
-*/
-
 class exp_node {
   public:
 
@@ -111,52 +95,78 @@ class divide_node : public binaryOp_node {
   float evaluate();
 };
 
+// MODIFY(ADD): or_node inherits from binaryOp_node and is used to boolean or operations
+class or_node : public binaryOp_node {
+  public:
+    or_node(exp_node *L, exp_node *R);
+    void print();
+    float evaluate();
+};
+
+// MODIFY(ADD): and_node inherits from binaryOp_node and is used to boolean or operations
+class and_node : public binaryOp_node {
+  public:
+    and_node(exp_node *L, exp_node *R);
+    void print();
+    float evaluate();
+};
+
+// MODIFY(ADD): not_node inherits from exp_node and is used to boolean or operations
+class not_node : public exp_node {
+  protected:
+    exp_node *exp;
+  public:
+    not_node(exp_node *R);
+    void print();
+    float evaluate();
+};
+
+// MODIFY(ADD): bool_equal_node inherits from binaryOp_node and is used to boolean or operations
 class bool_equal_node : public binaryOp_node {
   public:
-
-  bool_equal_node(exp_node *L, exp_node *R);
-  void print();
-  float evaluate();
+    bool_equal_node(exp_node *L, exp_node *R);
+    void print();
+    float evaluate();
 };
 
+// MODIFY(ADD): bool_greater_equal_node inherits from binaryOp_node and is used to boolean or operations
 class bool_greater_equal_node : public binaryOp_node {
   public:
-
-  bool_greater_equal_node(exp_node *L, exp_node *R);
-  void print();
-  float evaluate();
+    bool_greater_equal_node(exp_node *L, exp_node *R);
+    void print();
+    float evaluate();
 };
 
+// MODIFY(ADD): bool_less_equal_node inherits from binaryOp_node and is used to boolean or operations
 class bool_less_equal_node : public binaryOp_node {
   public:
-
-  bool_less_equal_node(exp_node *L, exp_node *R);
-  void print();
-  float evaluate();
+    bool_less_equal_node(exp_node *L, exp_node *R);
+    void print();
+    float evaluate();
 };
 
+// MODIFY(ADD): bool_greater_node inherits from binaryOp_node and is used to boolean or operations
 class bool_greater_node : public binaryOp_node {
   public:
-
-  bool_greater_node(exp_node *L, exp_node *R);
-  void print();
-  float evaluate();
+    bool_greater_node(exp_node *L, exp_node *R);
+    void print();
+    float evaluate();
 };
 
+// MODIFY(ADD): bool_less_node inherits from binaryOp_node and is used to boolean or operations
 class bool_less_node : public binaryOp_node {
   public:
-
-  bool_less_node(exp_node *L, exp_node *R);
-  void print();
-  float evaluate();
+    bool_less_node(exp_node *L, exp_node *R);
+    void print();
+    float evaluate();
 };
 
+// MODIFY(ADD): bool_not_equal_node inherits from binaryOp_node and is used to boolean or operations
 class bool_not_equal_node : public binaryOp_node {
   public:
-
-  bool_not_equal_node(exp_node *L, exp_node *R);
-  void print();
-  float evaluate();
+    bool_not_equal_node(exp_node *L, exp_node *R);
+    void print();
+    float evaluate();
 };
 
 class stmt_node {
@@ -180,6 +190,38 @@ class print_node: public stmt_node {
   exp_node *exp;
  public:
   print_node(exp_node *myexp);
+  void print();
+  void evaluate();
+};
+
+// MODIFY(ADD): read_node inherits from stmt_node and is used in the read statments
+class read_node: public stmt_node {
+ protected:
+  string id;
+ public:
+  read_node(string name);
+  void print();
+  void evaluate();
+};
+
+// MODIFY(ADD): if_else_node inherits from stmt_node and is used to if statments
+class if_else_node: public stmt_node {
+ protected:
+   exp_node *compopt1;
+   stmt_node *stmt1, *stmt2;
+ public:
+  if_else_node(exp_node *mycompopt1, stmt_node *mystmt1, stmt_node *mystmt2);
+  void print();
+  void evaluate();
+};
+
+// MODIFY(ADD): while_node inherits from stmt_node and is used for while statments
+class while_node: public stmt_node {
+ protected:
+   exp_node *compopt1;
+   stmt_node *stmt1;
+ public:
+  while_node(exp_node *mycompopt1, stmt_node *mystmt1);
   void print();
   void evaluate();
 };

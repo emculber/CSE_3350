@@ -1,0 +1,19 @@
+hidden = 130;
+x = 0;
+guessCount = 0;
+
+while(x == 0) {
+  guessCount = guessCount + 1;
+  read y;
+  if(y > hidden) {
+    print -1;
+  }else{};
+  if(y < hidden) {
+    print 1;
+  }else{};
+  if(y == hidden) {
+    print 0;
+    print guessCount;
+    x = 1;
+  }else{};
+};

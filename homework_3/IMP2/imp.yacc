@@ -6,11 +6,18 @@
 
    pgm -> stmtlist
    stmtlist -> stmt | stmtlist ; stmt
-   stmt -> id = exp 
-        |  print id
+   stmt -> id = logconj | print id | read id 
+         | if (compopt) {stmtlist} else {stmtlist} 
+         | while(logconj) {stmtlist}
+   logconj -> logconj || logdisj | logdisj | exp
+   logdisj -> logdisj && logneg | logneg
+   logneg -> !compopt | compopt
+   compopt -> exp == exp | exp != exp
+            | exp >= exp | exp <= exp
+            | exp >  exp | exp <  exp
    exp -> exp + mulexp | exp - mulexp 
    mulexp -> mulexp * primexp | mulexp / primexp
-   primexp ->  ( exp ) | ( exp ) | - primexp | id | number 
+   primexp ->  ( logconj ) | - primexp | id | number 
 */
 
 #include <iostream>
@@ -20,8 +27,6 @@
 #include <map>
 #include <list>
 #include "imp.h"
-
-
 
 using namespace std;
 
@@ -44,19 +49,41 @@ void yyerror(const char* s);
 %union {
   float number;
   char * var_name;
-  //logic_node *logic_node_ptr;
   exp_node *exp_node_ptr;
   stmt_node *stmt_node_ptr;
 }
 
 %error-verbose
 
+/*
+ * MODIFY(ADD): In the token section i added a couple new constant tokens shown bellow
+ * - READ (read)
+ * - OR (||)
+ * - AND (&&)
+ * - NOT (!)
+ * - BOOLEQUAL (==)
+ * - BOOLGREATEREQUAL (>=)
+ * - BOOLLESSEQUAL (<=)
+ * - BOOLGREATER (>)
+ * - BOOLLESS (<)
+ * - BOOLNOTEQUAL (!=)
+ * - IF (if)
+ * - ELSE (else)
+ * - WHILE (while)
+ *
+ * Also I have added 4 more nodes that are exp nodes listed bellow
+ * - logconj (OR,||)
+ * - logdisj (AND,&&)
+ * - logneg (NOT,!)
+ * - compopt (==, !=, etc.)
+ */
+
 %token <number> NUMBER
 %token <var_name> ID
-%token SEMICOLON  EQUALS PRINT  PLUS MINUS TIMES DIVIDE  LPAREN RPAREN LBRACE RBRACE OR AND NOT BOOLEQUAL BOOLGREATEREQUAL BOOLLESSEQUAL BOOLGREATER BOOLLESS BOOLNOTEQUAL
-//%type <logic_node_ptr> logconj
-//%type <logic_node_ptr> logdisj
-//%type <logic_node_ptr> logneg
+%token SEMICOLON  EQUALS PRINT READ  PLUS MINUS TIMES DIVIDE  LPAREN RPAREN LBRACE RBRACE OR AND NOT BOOLEQUAL BOOLGREATEREQUAL BOOLLESSEQUAL BOOLGREATER BOOLLESS BOOLNOTEQUAL IF ELSE WHILE
+%type <exp_node_ptr> logconj
+%type <exp_node_ptr> logdisj
+%type <exp_node_ptr> logneg
 %type <exp_node_ptr> compopt
 %type <exp_node_ptr> exp
 %type <exp_node_ptr> mulexp
@@ -81,11 +108,29 @@ stmtlist SEMICOLON error { // just copy up the stmtlist when an error occurs
 | stmt { $$ = $1; }
 ;
 
-stmt: ID EQUALS compopt { 
+/*
+ * MODIFY(UPDATE)
+ * In the grammer i have add 3 new grammer conditions
+ * - ID EQUALS logconj (So that variables can equal booleans expretions)
+ * - READ ID (reads in number to variable)
+ * - IF-ELSE (IF logconj is true else statments)
+ * - WHILE (WHILE true run statments)
+ */
+
+stmt: ID EQUALS logconj { 
   $$ = new assign_node($1, $3);
 }
 | PRINT exp {
   $$ = new print_node($2);
+}
+| READ ID {
+  $$ = new read_node($2);
+}
+| IF LPAREN logconj RPAREN stmt ELSE stmt {
+  $$ = new if_else_node($3, $5, $7);
+}
+| WHILE LPAREN logconj RPAREN stmt {
+  $$ = new while_node($3, $5);
 }
 | { 
   $$ = new skip_node();
@@ -94,18 +139,24 @@ stmt: ID EQUALS compopt {
 ;
 
 /*
+ * MODIFY(ADD)
+ * In the grammer there are 4 new boolean exp
+ * - logconj (logic conjunction)
+ * - logdisj (logic disjunction)
+ * - logneg (logic negitive)
+ * - compopt (exp compare operators)
+ */
 logconj: logconj OR logdisj { $$ = new or_node($1, $3); }
 | logdisj { $$ = $1; }
 | exp { $$ = $1; }
 ;
 logdisj: logdisj AND logneg { $$ = new and_node($1, $3); }
-| logneg { $$ = $1 }
+| logneg { $$ = $1; }
 ;
 
 logneg: NOT compopt { $$ = new not_node($2); }
-| compopt { $$ = $1 }
+| compopt { $$ = $1; }
 ;
-*/
 
 compopt : exp BOOLEQUAL exp { $$ = new bool_equal_node($1, $3); }
 | exp BOOLGREATEREQUAL exp { $$ = new bool_greater_equal_node($1, $3); }
@@ -129,8 +180,12 @@ mulexp:	mulexp TIMES primexp {
 | primexp { $$=$1;  }
 ;
 
+/*
+ * MODIFY(UPDATE)
+ * Changed (exp) to (logconj) so that the primexp can point back to the top of the grammer
+ */
 primexp: MINUS primexp { $$ = new neg_node($2); }
-| LPAREN compopt RPAREN  {  $$ = $2; }
+| LPAREN logconj RPAREN  {  $$ = $2; }
 |	NUMBER { $$ = new number_node($1); }
 | ID { $$ = new variable_node($1); }
 ;
